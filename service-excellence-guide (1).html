@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Technician Excellence Guide - Mid-State Plumbing</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @page {
+            size: letter;
+            margin: 0.35in;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.2;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .print-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .print-buttons button {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 12px 30px;
+            margin: 0 10px;
+            border-radius: 8px;
+            font-size: 14pt;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .print-buttons button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+        
+        .header h1 {
+            font-size: 22pt;
+            font-weight: 700;
+            margin-bottom: 3px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 11pt;
+            opacity: 0.95;
+            font-weight: 300;
+            position: relative;
+        }
+        
+        .intro {
+            background: #f8f9fa;
+            padding: 12px 25px;
+            border-left: 4px solid #667eea;
+            margin: 0;
+        }
+        
+        .intro h2 {
+            color: #667eea;
+            font-size: 13pt;
+            margin-bottom: 5px;
+        }
+        
+        .intro p {
+            font-size: 8.5pt;
+            line-height: 1.3;
+            color: #555;
+        }
+        
+        .step-section {
+            page-break-inside: avoid;
+            margin: 0;
+            padding: 12px 25px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .step-number {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18pt;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .step-title {
+            flex: 1;
+        }
+        
+        .step-title h3 {
+            font-size: 14pt;
+            color: #2c3e50;
+            margin-bottom: 2px;
+        }
+        
+        .step-title .description {
+            font-size: 8pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .importance {
+            background: #fff3cd;
+            border-left: 3px solid #ffc107;
+            padding: 7px 12px;
+            margin-bottom: 8px;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .importance-label {
+            font-weight: 700;
+            color: #856404;
+            font-size: 7.5pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+        
+        .importance-text {
+            font-size: 7.5pt;
+            color: #856404;
+            line-height: 1.3;
+        }
+        
+        .checklist {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 5px;
+            background: #f8f9fa;
+            border-radius: 3px;
+            border-left: 2px solid #667eea;
+            transition: all 0.2s;
+        }
+        
+        .checklist-item:hover {
+            background: #e9ecef;
+            transform: translateX(2px);
+        }
+        
+        .checkbox {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #667eea;
+            border-radius: 2px;
+            margin-right: 8px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            background: white;
+        }
+        
+        .checklist-text {
+            font-size: 7pt;
+            line-height: 1.2;
+            color: #2c3e50;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 25px;
+            text-align: center;
+        }
+        
+        .footer p {
+            font-size: 8pt;
+            margin-bottom: 4px;
+        }
+        
+        .footer .tagline {
+            font-size: 10pt;
+            font-weight: 600;
+            color: #667eea;
+            margin-top: 6px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .print-buttons {
+                display: none;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .step-section {
+                page-break-inside: avoid;
+            }
+            
+            .checklist-item:hover {
+                transform: none;
+            }
+            
+            .header {
+                padding: 12px 20px;
+            }
+            
+            .header h1 {
+                font-size: 20pt;
+            }
+            
+            .header .subtitle {
+                font-size: 10pt;
+            }
+            
+            .intro {
+                padding: 10px 20px;
+            }
+            
+            .intro h2 {
+                font-size: 12pt;
+            }
+            
+            .intro p {
+                font-size: 7.5pt;
+            }
+            
+            .step-section {
+                padding: 10px 20px;
+            }
+            
+            .step-number {
+                width: 35px;
+                height: 35px;
+                font-size: 16pt;
+            }
+            
+            .step-title h3 {
+                font-size: 13pt;
+            }
+            
+            .importance {
+                padding: 6px 10px;
+                margin-bottom: 6px;
+            }
+            
+            .importance-label,
+            .importance-text {
+                font-size: 7pt;
+            }
+            
+            .checklist {
+                gap: 4px;
+            }
+            
+            .checklist-item {
+                padding: 4px;
+            }
+            
+            .checklist-text {
+                font-size: 6.5pt;
+            }
+            
+            .footer {
+                padding: 10px 20px;
+            }
+            
+            .footer p {
+                font-size: 7pt;
+            }
+            
+            .footer .tagline {
+                font-size: 9pt;
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .checklist {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 18pt;
+            }
+            
+            .print-buttons button {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+    <script>
+        async function printPDF() {
+            const { jsPDF } = window.jspdf;
+            const element = document.querySelector('.container');
+            
+            // Show loading
+            const originalContent = document.body.innerHTML;
+            document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 24pt; color: #667eea;">Generating PDF... Please wait...</div>';
+            
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'letter');
+                
+                const imgWidth = 216; // Letter width in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                const pageHeight = 279; // Letter height in mm
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                // Add first page
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Add additional pages if needed
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                pdf.save('Service-Excellence-Guide.pdf');
+                
+                // Restore content
+                document.body.innerHTML = originalContent;
+                
+                // Re-attach event listeners
+                setTimeout(() => {
+                    document.getElementById('printBtn').addEventListener('click', printPage);
+                    document.getElementById('pdfBtn').addEventListener('click', printPDF);
+                }, 100);
+                
+            } catch (error) {
+                document.body.innerHTML = originalContent;
+                alert('Error generating PDF. Please try the Print option instead.');
+                setTimeout(() => {
+                    document.getElementById('printBtn').addEventListener('click', printPage);
+                    document.getElementById('pdfBtn').addEventListener('click', printPDF);
+                }, 100);
+            }
+        }
+        
+        function printPage() {
+            window.print();
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('printBtn').addEventListener('click', printPage);
+            document.getElementById('pdfBtn').addEventListener('click', printPDF);
+        });
+    </script>
+</head>
+<body>
+    <!-- Print/PDF Buttons -->
+    <div class="print-buttons">
+        <button id="printBtn">🖨️ Print</button>
+        <button id="pdfBtn">📄 Save as PDF</button>
+    </div>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🌟 Service Excellence Guide 🌟</h1>
+            <div class="subtitle">The 6-Step System for Outstanding Customer Service</div>
+        </div>
+        
+        <!-- Introduction -->
+        <div class="intro">
+            <h2>Your Path to 5-Star Service</h2>
+            <p>This guide outlines the proven system for delivering exceptional service on every call. Each step is designed to build trust, exceed expectations, and create loyal customers. Follow these steps consistently, and you'll become a top-performing technician while making every customer's day better.</p>
+        </div>
+        
+        <!-- Step 1: Prepare -->
+        <div class="step-section">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title">
+                    <h3>PREPARE</h3>
+                    <div class="description">Set yourself up for success before you arrive</div>
+                </div>
+            </div>
+            
+            <div class="importance">
+                <div class="importance-label">💡 Why This Matters</div>
+                <div class="importance-text">
+                    Preparation prevents problems and shows professionalism. When you arrive fully prepared, you save time, avoid callbacks, and demonstrate that you value the customer's time. This first step sets the tone for the entire service call.
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Reviewed call notes</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Reviewed previous history</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Gathered all necessary tools and materials</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Reviewed there are the correct checklists attached</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Planned approach to minimize callbacks</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Bring a home club flyer for the homeowner</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 2: Greet -->
+        <div class="step-section">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title">
+                    <h3>GREET</h3>
+                    <div class="description">Make a powerful first impression</div>
+                </div>
+            </div>
+            
+            <div class="importance">
+                <div class="importance-label">💡 Why This Matters</div>
+                <div class="importance-text">
+                    You never get a second chance to make a first impression. The first 60 seconds determine how the customer feels about you and our company. A great greeting builds immediate trust, sets clear expectations, and makes the customer comfortable having you in their home.
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Asked the customer if your parking location is acceptable</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Put on shoe covers</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Created great first impression greeting</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Built rapport with customer</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Explained service process clearly</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Take command of the call. Have the customer walk you through the house</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Set expectations. "My goal is 5 star service today, if there's anything I can do or if I'm not meeting that standard, please stop me and let me know."</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Ask the customer if it's ok to grab them if you see anything worth their attention</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Ask the customer what their goal is for today. Example "What's the optimal outcome for today?" "Is this issue something you want to get started/resolved today?"</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Offer free value added chores. Move/top off softener salt. Swap out old bulbs, test/change out smoke detector/thermostat batteries</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 3: Explore -->
+        <div class="step-section">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title">
+                    <h3>EXPLORE</h3>
+                    <div class="description">Discover all the customer's needs and concerns</div>
+                </div>
+            </div>
+            
+            <div class="importance">
+                <div class="importance-label">💡 Why This Matters</div>
+                <div class="importance-text">
+                    The best solutions come from thorough diagnosis. By asking great questions and truly listening, you uncover not just the obvious problem, but hidden issues that could cause future callbacks. This step positions you as a trusted advisor, not just a repair person.
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Asked about customer lifestyle and needs</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Asked open ended questions. "What prompted this call?", "How does this affect you?", "What do you like/dislike about your current system?", and "What would you change if you could?"</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Applied active listening</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Performed thorough system evaluation</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Fill out checklists</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Identified all concerns beyond initial issue</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Look for any other issues. Noisy equipment, leaks in surrounding area, strange smells or sounds.</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 4: Present -->
+        <div class="step-section">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title">
+                    <h3>PRESENT</h3>
+                    <div class="description">Educate and offer clear solutions</div>
+                </div>
+            </div>
+            
+            <div class="importance">
+                <div class="importance-label">💡 Why This Matters</div>
+                <div class="importance-text">
+                    People make decisions when they understand their options. Clear, confident presentation of solutions builds trust and helps customers make informed choices. When you tie solutions back to their goals and explain the value, you're not selling—you're helping them solve their problem the right way.
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Ask if there are any other decision makers that need to be contacted</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Bring the customer to the equipment, have them touch or get involved</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Our job is to inform and educate. Clearly explain what and why. What we can do.</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Ensured pricing transparency</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Communicated value matching customer needs. Tie their goals back to the solution.</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Provided multiple options</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Ask if there are any questions before you start</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Use the IPAD to present solutions clearly</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Give a time frame for the work to be completed</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Offer home club membership 10% discount</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 5: Execute -->
+        <div class="step-section">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div class="step-title">
+                    <h3>EXECUTE</h3>
+                    <div class="description">Deliver quality workmanship with care</div>
+                </div>
+            </div>
+            
+            <div class="importance">
+                <div class="importance-label">💡 Why This Matters</div>
+                <div class="importance-text">
+                    This is where you prove your expertise. Quality work done efficiently and cleanly builds your reputation and ensures customer satisfaction. Taking pride in your craft and showing gratitude throughout the process creates memorable service that leads to referrals and repeat business.
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Performed quality technical work</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Showed gratitude to customer</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Offered Service Partner Plan</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Maintained clean and professional workspace</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Tag and label valves</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 6: Wrap Up -->
+        <div class="step-section">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div class="step-title">
+                    <h3>WRAP UP</h3>
+                    <div class="description">Ensure satisfaction and secure future business</div>
+                </div>
+            </div>
+            
+            <div class="importance">
+                <div class="importance-label">💡 Why This Matters</div>
+                <div class="importance-text">
+                    The last impression is as important as the first. A strong wrap-up confirms the customer is thrilled with your work, secures positive reviews that bring in new business, and leaves them excited to call us again. This is where good service becomes great service and turns customers into advocates.
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Show customer work completed</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Show before and after pictures</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Show customer clean workspace</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Show the customer the labeled tags and value added</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">"I hope I've been able to provide the 5 start service I promised."</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Ask for a review. "We appreciate online review, I enjoy sharing them with the family." "My work is graded on feedback, please take a moment to provide an honest review."</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">Express gratitude to the homeowner</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>📞 Questions? Ask your supervisor or team lead</p>
+            <p>💼 This guide is your roadmap to becoming a top performer</p>
+            <div class="tagline">"We don't rise to the level of our expectations, we fall to the level of our preparation."</div>
+        </div>
+    </div>
+</body>
+</html>
