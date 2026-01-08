@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Test - Minimal</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script>
+        console.log('Step 1: Script started');
+        
+        try {
+            console.log('Step 2: Defining component');
+            
+            const TestApp = function() {
+                console.log('Step 3: Component rendering');
+                
+                return React.createElement('div', { 
+                    style: { padding: '20px', fontFamily: 'sans-serif' }
+                },
+                    React.createElement('h1', null, 'iOS Test - Success!'),
+                    React.createElement('p', null, 'If you see this, React is working on iOS.'),
+                    React.createElement('p', null, 'iOS Version: ' + navigator.userAgent),
+                    React.createElement('button', {
+                        onClick: function() { alert('Button works!'); },
+                        style: { padding: '10px', fontSize: '16px' }
+                    }, 'Test Button')
+                );
+            };
+            
+            console.log('Step 4: Rendering app');
+            ReactDOM.render(
+                React.createElement(TestApp),
+                document.getElementById('root')
+            );
+            console.log('Step 5: Render complete');
+            
+        } catch (error) {
+            console.error('ERROR:', error);
+            alert('Error: ' + error.message);
+            document.getElementById('root').innerHTML = 
+                '<div style="padding:20px;color:red;">' +
+                '<h1>Error</h1>' +
+                '<p>' + error.message + '</p>' +
+                '<p>' + error.stack + '</p>' +
+                '</div>';
+        }
+    </script>
+</body>
+</html>
